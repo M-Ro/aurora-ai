@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os"
-    "github.com/M-Ro/aurora-ai/cmd/instance"
+	"github.com/M-Ro/aurora-ai/cmd/instance"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 var rootCmd = &cobra.Command{}
 
 func init() {
-    rootCmd.AddCommand(instance.NewCmd())
+	rootCmd.AddCommand(instance.NewCmd())
 }
 
 // initialises viper config library.
@@ -30,11 +30,11 @@ func initConfig() {
 }
 
 func main() {
-    initConfig()
+	initConfig()
 
-    err := rootCmd.Execute();
-    if err != nil {
-        fmt.Println(os.Stderr, err)
-        os.Exit(1)
-    }
+	err := rootCmd.Execute()
+	if err != nil {
+		fmt.Println(os.Stderr, err)
+		os.Exit(1)
+	}
 }
