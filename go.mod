@@ -1,4 +1,4 @@
-module github.com/M-Ro/aurora
+module github.com/M-Ro/aurora-ai
 
 go 1.17
 

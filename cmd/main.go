@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-    "github.com/M-Ro/aurora/cmd/instance"
+    "github.com/M-Ro/aurora-ai/cmd/instance"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

@@ -3,8 +3,8 @@ package textgen
 import (
 	"encoding/json"
 
-	"github.com/M-Ro/aurora/api"
-	"github.com/M-Ro/aurora/config"
+	"github.com/M-Ro/aurora-ai/api"
+	"github.com/M-Ro/aurora-ai/config"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )

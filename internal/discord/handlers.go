@@ -3,7 +3,7 @@ package discord
 import (
 	"time"
 
-	"github.com/M-Ro/aurora/internal/textgen"
+	"github.com/M-Ro/aurora-ai/internal/textgen"
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
 )

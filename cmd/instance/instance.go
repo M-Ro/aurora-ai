@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/M-Ro/aurora/internal/discord"
+	"github.com/M-Ro/aurora-ai/internal/discord"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
