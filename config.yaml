@@ -1,0 +1,19 @@
+
+llm:
+  host: ""
+  # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
+  settings:
+    max_new_tokens: 768
+    maximum_prompt_tokens: 2048
+    temperature: 1.99
+    top_p: 0.18
+    top_k: 30
+    typical_p: 1
+    repetition_penalty: 1.15
+    encoder_repetition_penalty: 1.0
+    no_repeat_ngram_size: 0
+    min_length: 0
+    do_sample: true
+
+discord:
+  auth_token: ""
