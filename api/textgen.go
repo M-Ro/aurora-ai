@@ -10,10 +10,17 @@ type SendHashRequest struct {
 	FnIndex     uint32 `json:"fn_index"`
 }
 
-type SendDataRequest struct {
+type SendPrepDataRequest struct {
 	SessionHash string   `json:"session_hash"`
 	FnIndex     uint32   `json:"fn_index"`
-	Data        []string `json:"data"`
+	Data        []*string `json:"data"`
+	EventData   *string  `json:"event_data"`
+}
+
+type SendInferenceDataRequest struct {
+	SessionHash string   `json:"session_hash"`
+	FnIndex     uint32   `json:"fn_index"`
+	Data        []*string `json:"data"`
 	EventData   *string  `json:"event_data"`
 }
 

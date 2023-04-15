@@ -7,7 +7,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io"
-	"net/http"
 )
 
 var (
@@ -45,7 +44,7 @@ func (conn *APIConnection) connect() error {
 
 	c, resp, err := dialer.Dial(
 		"ws://"+viper.GetString("llm.host")+"/queue/join",
-		defaultHeader(),
+	    nil,
 	)
 
 	if err != nil {
@@ -73,16 +72,5 @@ func (conn *APIConnection) connect() error {
 func (conn *APIConnection) Disconnect() {
 	if conn.Status == Connected {
 		conn.Ws.Close()
-	}
-}
-
-func defaultHeader() http.Header {
-	return http.Header{
-		"Accept":                {"*/*"},
-		"Accept-Language":       {"en-GB,en;q=0.5"},
-		"Accept-Encoding":       {"gzip, deflate"},
-		"Cache-Control":         {"no-cache"},
-		"Pragma":                {"no-cache"},
-		"Sec-WebSocket-Version": {"13"},
 	}
 }

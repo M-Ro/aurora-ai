@@ -1,6 +1,8 @@
 package textgen
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type Session struct {
 	SessionHash string `json:"session_hash"`

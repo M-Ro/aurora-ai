@@ -1,6 +1,8 @@
 package discord
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/M-Ro/aurora-ai/internal/textgen"
@@ -37,6 +39,8 @@ func OnMessageCreate(s *discordgo.Session, msg *discordgo.MessageCreate) {
 		logrus.Error("Failed to set typing state: " + err.Error())
 	}
 
+
+
 	respond(s, msg)
 }
 
@@ -47,10 +51,18 @@ func respond(s *discordgo.Session, msg *discordgo.MessageCreate) {
 	content := ""
 	lastTime := time.Now().UnixMilli()
 
+    // hack: replace the bot @ with the identifier token
+    token := fmt.Sprintf("<@%s> ", s.State.User.ID)
+    queryContent := strings.Replace(msg.Message.Content, token, "", -1)
+
 	err = textgen.RunInference(
-		msg.Message.Content,
+        queryContent,
 		func(output string) {
 			content = output
+
+            if len(content) <= 0 {
+                return
+            }
 
 			if sendMsg == nil {
 				sendMsg, err = s.ChannelMessageSend(msg.ChannelID, content)
