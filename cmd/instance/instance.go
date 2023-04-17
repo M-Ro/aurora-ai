@@ -20,9 +20,6 @@ func NewCmd() *cobra.Command {
 	}
 }
 
-// gross
-var dg *discordgo.Session
-
 // Start the discord client
 func Start(_ *cobra.Command, _ []string) {
 	log.Info("Starting...")

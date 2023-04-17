@@ -29,7 +29,23 @@ func (c *ChatContext) AddMessage(ctxMsg *ContextMessage) error {
 
 // Prompt returns the current conversation prompt.
 func (c *ChatContext) Prompt() string {
-    return ""
+    prompt := viper.GetString("llm.context")
+    botToken := viper.GetString("llm.identifier_b")
+
+    for _, ctxMsg := range c.Messages {
+        token := viper.GetString("llm.identifier_p")
+
+        if ctxMsg.Author.Id == botToken {
+            token = botToken
+        }
+
+        prompt += "\n" + token + " " + ctxMsg.Message
+    }
+
+    // Reprompt the bot
+    prompt += "\n" + botToken
+
+    return prompt
 }
 
 // CalculateTokenCount gets the token count from the context.

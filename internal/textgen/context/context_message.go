@@ -21,7 +21,7 @@ type ContextMessage struct {
 // The bot returns the entire conversation each time, so we need to isolate the last message.
 func NewCtxMsgFromBotResponse(response string) ContextMessage {
     // We need to remove the last string from the human token
-    // why? because the api is inconsistent and requires a suffix colon to inference without
+    // because the api is inconsistent and requires a suffix colon to inference without
     // going schizo, but at termination doesn't bother to produce a suffix colon itself.
     botToken := viper.GetString("llm.identifier_b")
     eosToken := viper.GetString("llm.identifier_p")
@@ -36,7 +36,7 @@ func NewCtxMsgFromBotResponse(response string) ContextMessage {
         msg = helpers.Substr(
             response,
             lB + len(botToken),
-            lH - (lB + len(botToken)),
+            lH - (lB + len(botToken) + 1), // +1 to drop the \n the bot throws at the end
         )
     } else {
         msg = helpers.Substr(
