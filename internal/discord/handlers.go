@@ -1,7 +1,6 @@
 package discord
 
 import (
-	"strings"
 	"time"
 
 	"github.com/M-Ro/aurora-ai/internal/textgen"
@@ -19,11 +18,6 @@ func OnMessageCreate(s *discordgo.Session, msg *discordgo.MessageCreate) {
 	if msg.Author.ID == s.State.User.ID {
 		return
 	}
-
-    // Check if this was a command.
-    if handleTextCommand(s, msg) {
-        return
-    }
 
 	// Ignore if we weren't @mentioned
 	found := false
@@ -50,28 +44,28 @@ func OnMessageCreate(s *discordgo.Session, msg *discordgo.MessageCreate) {
 func respond(s *discordgo.Session, msg *discordgo.MessageCreate) {
 	lastTime := time.Now().UnixMilli()
 
-    // Get the chat ctx for this channel, build & append a new ctx msg from the discord msg
-    chatCtx := context.GetContext(msg.ChannelID)
-    ctxMsg := NewCtxMsgFromDiscordMsg(s, msg)
-    err := chatCtx.AddMessage(&ctxMsg)
-    if err != nil {
-        logrus.Error("Failed to add message to chat context.", err)
-        return
-    }
+	// Get the chat ctx for this channel, build & append a new ctx msg from the discord msg
+	chatCtx := context.GetContext(msg.ChannelID)
+	ctxMsg := NewCtxMsgFromDiscordMsg(s, msg)
+	err := chatCtx.AddMessage(&ctxMsg)
+	if err != nil {
+		logrus.Error("Failed to add message to chat context.", err)
+		return
+	}
 
-    // Run inference, update discord message as we get new tokens.
+	// Run inference, update discord message as we get new tokens.
 	var sendMsg *discordgo.Message
 	err = textgen.RunInference(
-        chatCtx.Prompt(), // Send the entire compiled conversation prompt to the inferencer
+		chatCtx.Prompt(), // Send the entire compiled conversation prompt to the inferencer
 		func(output string) {
-            if len(output) <= 0 {
-                return
-            }
+			if len(output) <= 0 {
+				return
+			}
 
-            ctxBotResponseMsg := context.NewCtxMsgFromBotResponse(output)
-            if len(ctxBotResponseMsg.Message) <= 0 {
-                return
-            }
+			ctxBotResponseMsg := context.NewCtxMsgFromBotResponse(output)
+			if len(ctxBotResponseMsg.Message) <= 0 {
+				return
+			}
 
 			if sendMsg == nil {
 				sendMsg, err = s.ChannelMessageSend(msg.ChannelID, ctxBotResponseMsg.Message)
@@ -91,11 +85,11 @@ func respond(s *discordgo.Session, msg *discordgo.MessageCreate) {
 			}
 		},
 		func(output string) {
-            if len(output) <= 0 {
-                return
-            }
+			if len(output) <= 0 {
+				return
+			}
 
-            ctxBotResponseMsg := context.NewCtxMsgFromBotResponse(output) 
+			ctxBotResponseMsg := context.NewCtxMsgFromBotResponse(output)
 
 			if sendMsg != nil {
 				sendMsg, err = s.ChannelMessageEdit(msg.ChannelID, sendMsg.Reference().MessageID, ctxBotResponseMsg.Message)
@@ -104,50 +98,25 @@ func respond(s *discordgo.Session, msg *discordgo.MessageCreate) {
 					return
 				}
 
-                // Add the message to the convo prompt
-                chatCtx.AddMessage(&ctxBotResponseMsg)
+				// Add the message to the convo prompt
+				chatCtx.AddMessage(&ctxBotResponseMsg)
 			}
 		},
 	)
 }
 
-type TextCommandFunction func(*discordgo.Session, *discordgo.MessageCreate)
-type CommandFuncMap map[string]TextCommandFunction
-
-var commands CommandFuncMap = nil 
-
-// Checks if the message matches any known text command. If so, 
-func handleTextCommand(s *discordgo.Session, msg *discordgo.MessageCreate) bool {
-    if commands == nil {
-        commands = make(CommandFuncMap)
-        registerTextCommands(commands)
-    }
-
-    for key, callFunc := range commands {
-        if strings.HasPrefix(msg.Content, key) {
-            callFunc(s, msg)
-            return true
-        }
-    }
-
-    return false;
-}
-
-func registerTextCommands(commands CommandFuncMap) {
-    commands["!reset"] = cmdResetConversation
-}
-
+// TODO reimplement this
 func cmdResetConversation(s *discordgo.Session, msg *discordgo.MessageCreate) {
-    chatCtx := context.GetContext(msg.ChannelID)
+	chatCtx := context.GetContext(msg.ChannelID)
 
-    if chatCtx == nil {
-        return
-    }
+	if chatCtx == nil {
+		return
+	}
 
-    chatCtx.Messages = []context.ContextMessage{}
+	chatCtx.Messages = []context.ContextMessage{}
 
-    _, err := s.ChannelMessageSend(msg.ChannelID, "Conversation has been reset.")
-    if err != nil {
-        logrus.Error("fek", err)
-    }
+	_, err := s.ChannelMessageSend(msg.ChannelID, "Conversation has been reset.")
+	if err != nil {
+		logrus.Error("fek", err)
+	}
 }

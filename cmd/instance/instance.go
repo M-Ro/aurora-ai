@@ -31,6 +31,7 @@ func Start(_ *cobra.Command, _ []string) {
 	}
 
 	registerEventHandlers(dg)
+	discord.RegisterSlashCommands(dg)
 
 	err = dg.Open()
 	if err != nil {
@@ -42,10 +43,14 @@ func Start(_ *cobra.Command, _ []string) {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 
+	log.Info("Cleanup")
+	discord.CleanupSlashCommands(dg)
+
 	dg.Close()
 }
 
 func registerEventHandlers(dg *discordgo.Session) {
 	dg.AddHandler(discord.OnReady)
 	dg.AddHandler(discord.OnMessageCreate)
+	dg.AddHandler(discord.OnInteraction)
 }

@@ -1,11 +1,10 @@
-package textgen
+package gradio
 
 import (
 	"crypto/tls"
 	"errors"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"io"
 )
 
@@ -27,7 +26,7 @@ type APIConnection struct {
 	Ws     *websocket.Conn
 }
 
-func newAPIConnection() *APIConnection {
+func NewAPIConnection() *APIConnection {
 	conn := APIConnection{
 		Status: Disconnected,
 		Ws:     nil,
@@ -36,15 +35,15 @@ func newAPIConnection() *APIConnection {
 	return &conn
 }
 
-func (conn *APIConnection) connect() error {
+func (conn *APIConnection) Connect(host string) error {
 	conn.Status = Connecting
 
 	dialer := *websocket.DefaultDialer
 	dialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	c, resp, err := dialer.Dial(
-		"ws://"+viper.GetString("llm.host")+"/queue/join",
-	    nil,
+		"ws://"+host+"/queue/join",
+		nil,
 	)
 
 	if err != nil {

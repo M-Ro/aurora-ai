@@ -11,17 +11,17 @@ type SendHashRequest struct {
 }
 
 type SendPrepDataRequest struct {
-	SessionHash string   `json:"session_hash"`
-	FnIndex     uint32   `json:"fn_index"`
+	SessionHash string    `json:"session_hash"`
+	FnIndex     uint32    `json:"fn_index"`
 	Data        []*string `json:"data"`
-	EventData   *string  `json:"event_data"`
+	EventData   *string   `json:"event_data"`
 }
 
 type SendInferenceDataRequest struct {
-	SessionHash string   `json:"session_hash"`
-	FnIndex     uint32   `json:"fn_index"`
-	Data        []*string `json:"data"`
-	EventData   *string  `json:"event_data"`
+	SessionHash string      `json:"session_hash"`
+	FnIndex     uint32      `json:"fn_index"`
+	Data        interface{} `json:"data"`
+	EventData   *string     `json:"event_data"`
 }
 
 type ParameterSet struct {

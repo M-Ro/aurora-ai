@@ -1,4 +1,4 @@
-package textgen
+package gradio
 
 import (
 	"github.com/google/uuid"
